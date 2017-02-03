@@ -124,4 +124,5 @@ dependencies {
 
   compile "com.squareup.picasso:picasso:2.4.0"
 
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
 }

@@ -18,36 +18,24 @@ public class LongThread implements Runnable {
     String imageUrl;
     int mchunknumbers;
     ImageView mImageView;
-
-
     public static final String TAG = "LongThread";
 
     public LongThread() {
     }
 
-//    public LongThread(int threadNo, String imageUrl, Handler handler) {
-//        this.threadNo = threadNo;
-//        this.handler = handler;
-//        this.imageUrl = imageUrl;
-//    }
-
-
-
-    public LongThread( ImageView imageView,int chunknumbers,Handler handler) {
-        mchunknumbers=chunknumbers;
+    public LongThread(ImageView imageView, int chunknumbers, Handler handler) {
+        mchunknumbers = chunknumbers;
         mImageView = imageView;
         this.handler = handler;
-
     }
 
     @Override
     public void run() {
         Log.i(TAG, "Starting Thread : " + threadNo);
-       // getBitmap(imageUrl);
-        sendMessage(1,splitImage( mImageView,mchunknumbers));
+        // getBitmap(imageUrl);
+        sendMessage(1, splitImage(mImageView, mchunknumbers));
         Log.i(TAG, "Thread Completed " + threadNo);
     }
-
 
     public void sendMessage(int what, ArrayList<Bitmap> splittedList) {
         Message message = handler.obtainMessage(what, splittedList);
@@ -68,16 +56,13 @@ public class LongThread implements Runnable {
         return bitmap;
     }
 
-
     private ArrayList<Bitmap> splitImage(ImageView image, int chunkNumbers) {
         //For the number of rows and columns of the grid to be displayed
         int rows, cols;
         //For height and width of the small image smallimage_s
         int smallimage_Height, smallimage_Width;
         //To store all the small image smallimage_s in bitmap format in this list
-       ArrayList<Bitmap> smallimages = new ArrayList<Bitmap>(chunkNumbers);
-//        smallimages = new ArrayList<Bitmap>(chunkNumbers);
-
+        ArrayList<Bitmap> smallimages = new ArrayList<Bitmap>(chunkNumbers);
         //Getting the scaled bitmap of the source image
         BitmapDrawable mydrawable = (BitmapDrawable) image.getDrawable();
         Bitmap bitmap = mydrawable.getBitmap();
@@ -97,11 +82,4 @@ public class LongThread implements Runnable {
         }
         return smallimages;
     }
-
-
-
-
-
-
-
 }

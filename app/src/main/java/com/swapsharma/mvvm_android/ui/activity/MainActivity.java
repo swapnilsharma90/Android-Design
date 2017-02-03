@@ -23,6 +23,11 @@ import com.swapsharma.mvvm_android.util.DialogFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -41,13 +46,14 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
     ImageView ivPickedImage;
     @BindView(R.id.pickImageBtn)
     Button pickImageBtn;
+
+//    @BindView(R.id.createMosiacBtn)
+//    Button createMosaicBtn;
+
     @BindView(R.id.gridview)
     GridView grid;
-    // The view Picasso is loading an image into
     List<Target> targets;
     int rows, cols;
-    //    @BindView(R.id.gridIv)
-//    ImageView gridIv;
     private Subscription subscription;
     @Inject
     MainPresenter mMainPresenter;
@@ -58,7 +64,13 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
     ThreadPoolExecutor executor;
     ArrayList<Bitmap> myList;
 
+    private Handler handler2;
+
+
     private Boolean isLoaded = false;
+
+
+    List<String> hexCodes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,8 +115,8 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
             //todo use picasso with callback
             Bitmap scaledBitmapx = Bitmap.createScaledBitmap((Bitmap) result, 350, 350, true);
             ivPickedImage.setImageBitmap(scaledBitmapx);
-            executor.execute(new LongThread(ivPickedImage, 4000, new Handler(this)));
-            rows = cols = (int) Math.sqrt(4000);
+            executor.execute(new LongThread(ivPickedImage, 3200, new Handler(this)));
+            rows = cols = (int) Math.sqrt(3200);
 //
         } else {
             //todo not needed
@@ -198,9 +210,19 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
         }
     }
 
+    public void getHexCodes() throws ExecutionException, InterruptedException {
+        // do something long
+        ExecutorService executor = Executors.newFixedThreadPool(1);
+        //new Thread(new Task()).start();
+        TaskCallable task = new TaskCallable ();
+        Future<List<String>> future = executor.submit(task);
+        hexCodes = future.get();
+    }
+
     @Override
     public boolean handleMessage(Message message) {
         myList = (ArrayList) message.obj;
+
         ivPickedImage.setVisibility(View.GONE);
         //Getting the grid view and setting an adapter to it
         grid.setVisibility(View.VISIBLE);
@@ -208,18 +230,14 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
         grid.setAdapter(chunksAdapter);
         grid.setNumColumns((int) Math.sqrt(myList.size()));
         //find average color
-
-        String url = "http://10.0.2.2:8765/color/32/32/";
-        List<String> hexCodes = new ArrayList<>();
-        //All images color avg.
-
-        for (int i = 0; i < rows * cols; i++) {
-            String hex = Integer.toString
-                    (ColorUtil.calculateAverageColor((Bitmap) grid.getItemAtPosition(i), 4), 16);
-            //remove - if contains
-            String hexCode = hex.replaceAll("-", "");
-            hexCodes.add(url.concat(hexCode));
+        try {
+            getHexCodes();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+
         bitmaps = new ArrayList<Bitmap>();
         targets = new ArrayList<Target>();
         for (int i = 0; i < hexCodes.size(); i++) {
@@ -233,13 +251,11 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
                     updateProgressBar(false);
                     targets.add(this);
                 }
-
                 @Override
                 public void onBitmapFailed(Drawable errorDrawable) {
                     targets.remove(this);
                     updateProgressBar(true);
                 }
-
                 @Override
                 public void onPrepareLoad(Drawable placeHolderDrawable) {
                     Log.i("Targets", "Preparing: " + k);
@@ -258,4 +274,27 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
         grid.invalidateViews();
         return true;
     }
+    class TaskCallable implements Callable {
+        @Override
+        public List<String> call() throws Exception {
+            String url = "http://10.0.2.2:8765/color/32/32/";
+            hexCodes = new ArrayList<>();
+            for (int i = 0; i < rows * cols; i++) {
+                final int value = i;
+                try {
+                    String hex = Integer.toString
+                            (ColorUtil.calculateAverageColor((Bitmap) grid.getItemAtPosition(i), 4), 16);
+                    //remove - if contains
+                    String hexCode = hex.replaceAll("-", "");
+                    hexCodes.add(url.concat(hexCode));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return hexCodes;
+        }
+
+    }
 }
+

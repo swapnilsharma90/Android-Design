@@ -16,18 +16,11 @@ import rx.Observable;
 public interface TileService {
 
     //http://localhost:8765/color/32/32/abc123
-
-
 //    String ENDPOINT = "http://10.0.2.2:8765/color/32/32/abc123";
-
     String ENDPOINT = "http://10.0.2.2:8765/color/32/32/";
-
-//    @GET("tile")
-//    Observable<Tile> getTile();
 
     @GET("{hexCode}")
     Observable<Bitmap> getTile(@Path("hexCode") String hexCode);
-
 
     /******** Helper class that sets up a new services *******/
     class Creator {
