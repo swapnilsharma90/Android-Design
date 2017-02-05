@@ -8,26 +8,25 @@
     <Button
         android:id="@+id/pickImageBtn"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_below="@+id/gridview"
 
         android:layout_marginTop="30dp"
         android:gravity="center"
-        android:text="Select Image" />
+        android:text="Create tiles" />
 
 
-    <!--<Button-->
-        <!--android:id="@+id/createMosiacBtn"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_below="@+id/gridview"-->
+    <Button
+        android:id="@+id/createMosiacBtn"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_below="@+id/pickImageBtn"
 
-        <!--android:layout_marginTop="30dp"-->
-        <!---->
-        <!--android:gravity="center"-->
-        <!--android:text="Select Image" />-->
+        android:layout_marginTop="10dp"
 
 
+        android:gravity="center"
+        android:text="create Mosiac" />
 
 
     <ImageView
@@ -47,17 +46,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="false"
         android:layout_centerHorizontal="true"
-        android:verticalSpacing="2dp"
         android:layout_margin="16dp"
         android:padding="0dp"
-
+        android:verticalSpacing="2dp"
         >
-        <!--<ImageView-->
-            <!--android:id="@+id/gridIv"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:background="@color/colorAccent"-->
-            <!--/>-->
     </GridView>
 
 

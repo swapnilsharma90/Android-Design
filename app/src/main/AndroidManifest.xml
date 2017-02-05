@@ -40,7 +40,9 @@
 
 
 
-
+        <activity
+            android:name="com.swapsharma.mvvm_android.ui.activity.MosaicActivity"
+             />
 
 
 

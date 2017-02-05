@@ -76,7 +76,7 @@ public class ChunksAdapter extends BaseAdapter {
         ImageView imageView = (ImageView) grid.findViewById(R.id.image);
         imageView.setLayoutParams(new LinearLayout.LayoutParams(imageWidth + 2, imageHeight-2));
         imageView.setImageBitmap(imageChunks.get(position));
-
+        
 //        LinearLayout ll = (LinearLayout) grid.findViewById(R.id.ll);
 //        BitmapDrawable drawableBitmap=new BitmapDrawable(imageChunks.get(position));
 //        ll.setBackground(drawableBitmap);
