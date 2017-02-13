@@ -2,8 +2,11 @@ package com.swapsharma.mvvm_android.ui.activity.base;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.swapsharma.mvvm_android.DesignApplication;
+import com.swapsharma.mvvm_android.R;
 import com.swapsharma.mvvm_android.di.component.ActivityComponent;
 import com.swapsharma.mvvm_android.di.component.ConfigPersistentComponent;
 import com.swapsharma.mvvm_android.di.component.DaggerConfigPersistentComponent;
@@ -67,4 +70,14 @@ public class BaseActivity extends AppCompatActivity {
         return mActivityComponent;
     }
 
+    public void updateProgressBar(boolean shouldShow) {
+        ProgressBar progressView = (ProgressBar) findViewById(R.id.progressBar);
+        if (null != progressView) {
+            if (shouldShow) {
+                progressView.setVisibility(View.VISIBLE);
+            } else {
+                progressView.setVisibility(View.GONE);
+            }
+        }
+    }
 }

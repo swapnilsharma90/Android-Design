@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.GridView;
-import android.widget.ProgressBar;
 
 import com.swapsharma.mvvm_android.R;
 import com.swapsharma.mvvm_android.ui.activity.base.BaseActivity;
@@ -29,7 +28,7 @@ public class MosaicActivity extends BaseActivity implements MainMvpView, Handler
     GridView grid;
     //@Inject
     ChunksAdapter chunksAdapter;
-    ArrayList<Bitmap> smallimages ;
+    ArrayList<Bitmap> smallimages;
     List<String> hexCodes;
     ThreadPoolExecutor executor;
 
@@ -85,16 +84,6 @@ public class MosaicActivity extends BaseActivity implements MainMvpView, Handler
         super.onDestroy();
     }
 
-    public void updateProgressBar(boolean shouldShow) {
-        ProgressBar progressView = (ProgressBar) findViewById(R.id.progressBar);
-        if (null != progressView) {
-            if (shouldShow) {
-                progressView.setVisibility(View.VISIBLE);
-            } else {
-                progressView.setVisibility(View.GONE);
-            }
-        }
-    }
 
     @Override
     public boolean handleMessage(Message message) {

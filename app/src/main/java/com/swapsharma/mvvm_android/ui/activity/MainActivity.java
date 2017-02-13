@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.swapsharma.mvvm_android.R;
@@ -37,7 +36,6 @@ import rx.Subscription;
 
 public class MainActivity extends BaseActivity implements MainMvpView, Handler.Callback {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
     @BindView(R.id.pickedIv)
     ImageView ivPickedImage;
     @BindView(R.id.pickImageBtn)
@@ -46,17 +44,22 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
     Button createMosaicBtn;
     @BindView(R.id.gridview)
     GridView grid;
-    int rows, cols;
-    private Subscription subscription;
+
+
     @Inject
     MainPresenter mMainPresenter;
     //@Inject
     ChunksAdapter chunksAdapter;
+
+    int rows, cols;
+    private Subscription subscription;
     ThreadPoolExecutor executor;
-    ArrayList<Bitmap> myList;
+    ArrayList<Bitmap> tileList;
     private Handler handler2;
     private Boolean isTiled = false;
     List<String> hexCodes;
+
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,13 +113,12 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
     private void onImagePicked(Object result) {
         Toast.makeText(this, String.format("Please wait ", result), Toast.LENGTH_LONG).show();
         if (result instanceof Bitmap) {
-            //todo use picasso with callback
 
             updateProgressBar(true);
             Bitmap scaledBitmapx = Bitmap.createScaledBitmap((Bitmap) result, 350, 350, true);
             ivPickedImage.setImageBitmap(scaledBitmapx);
-            executor.execute(new LongThread(scaledBitmapx, 1500, new Handler(this)));
-            rows = cols = (int) Math.sqrt(1500);
+            executor.execute(new LongThread(scaledBitmapx, 3000, new Handler(this)));
+            rows = cols = (int) Math.sqrt(3000);
 
         } else {
             //todo not needed
@@ -126,14 +128,14 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
 
     @Override
     public boolean handleMessage(Message message) {
-        myList = (ArrayList) message.obj;
+        tileList = (ArrayList) message.obj;
 
         ivPickedImage.setVisibility(View.GONE);
         //Getting the grid view and setting an adapter to it
         grid.setVisibility(View.VISIBLE);
-        chunksAdapter = new ChunksAdapter(this, myList);
+        chunksAdapter = new ChunksAdapter(this, tileList);
         grid.setAdapter(chunksAdapter);
-        grid.setNumColumns((int) Math.sqrt(myList.size()));
+        grid.setNumColumns((int) Math.sqrt(tileList.size()));
         updateProgressBar(false);
         isTiled = true;
         return true;
@@ -147,7 +149,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
         DialogFactory.createGenericErrorDialog(this, getString(R.string.error_loading_tiles))
                 .show();
     }
-
     @Override
     public void showMosaicImage() {
         createPhotoMosaic();
@@ -155,9 +156,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
 
     @Override
     public void showTiledImage() {
-
         pickImageFromSource(Sources.GALLERY);
-
     }
 
     @Override
@@ -173,18 +172,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
             subscription.unsubscribe();
         }
     }
-
-    public void updateProgressBar(boolean shouldShow) {
-        ProgressBar progressView = (ProgressBar) findViewById(R.id.progressBar);
-        if (null != progressView) {
-            if (shouldShow) {
-                progressView.setVisibility(View.VISIBLE);
-            } else {
-                progressView.setVisibility(View.GONE);
-            }
-        }
-    }
-
     public void getHexCodes() throws ExecutionException, InterruptedException {
         // do something long
         ExecutorService executor = Executors.newFixedThreadPool(1);
