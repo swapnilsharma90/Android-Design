@@ -37,15 +37,6 @@ public class ChunksAdapter extends BaseAdapter {
         imageHeight = images.get(0).getHeight();
     }
 
-    //    @Inject
-//    public ChunksAdapter(Context context, ArrayList<Bitmap> images,List<String> hexCodes) {
-//        mContext = context;
-//        imageChunks = images;
-//        imageWidth = images.get(0).getWidth();
-//        imageHeight = images.get(0).getHeight();
-//        mhexCodes=hexCodes;
-//
-//    }
     @Override
     public int getCount() {
         return imageChunks.size();
@@ -74,16 +65,8 @@ public class ChunksAdapter extends BaseAdapter {
             grid = (View) convertView;
         }
         ImageView imageView = (ImageView) grid.findViewById(R.id.image);
-        imageView.setLayoutParams(new LinearLayout.LayoutParams(imageWidth + 2, imageHeight-2));
+        imageView.setLayoutParams(new LinearLayout.LayoutParams(imageWidth + 2, imageHeight - 2));
         imageView.setImageBitmap(imageChunks.get(position));
-        
-//        LinearLayout ll = (LinearLayout) grid.findViewById(R.id.ll);
-//        BitmapDrawable drawableBitmap=new BitmapDrawable(imageChunks.get(position));
-//        ll.setBackground(drawableBitmap);
-            //or
-        //ll.setBackgroundDrawable(drawableBitmap);
-        //imageView.setBackground(imageChunks.get(position));
-
         return grid;
     }
 }

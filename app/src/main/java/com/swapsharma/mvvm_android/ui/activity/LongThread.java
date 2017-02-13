@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 public class LongThread implements Runnable {
 
@@ -20,8 +21,20 @@ public class LongThread implements Runnable {
     ImageView mImageView;
     public static final String TAG = "LongThread";
 
+    List<String> mhexCodes;
+    Handler hexHandler;
+
+
+
     public LongThread() {
     }
+
+    public LongThread(List<String> hexCodes, Handler handler) {
+        mhexCodes = hexCodes;
+        this.hexHandler = handler;
+    }
+
+
 
     public LongThread(ImageView imageView, int chunknumbers, Handler handler) {
         mchunknumbers = chunknumbers;
