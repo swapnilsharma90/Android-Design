@@ -9,7 +9,6 @@ import android.widget.GridView;
 import android.widget.ProgressBar;
 
 import com.swapsharma.mvvm_android.R;
-import com.swapsharma.mvvm_android.network.Tile;
 import com.swapsharma.mvvm_android.ui.activity.base.BaseActivity;
 import com.swapsharma.mvvm_android.util.DialogFactory;
 
@@ -23,14 +22,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class MosaicActivity extends BaseActivity implements MainMvpView ,Handler.Callback {
+public class MosaicActivity extends BaseActivity implements MainMvpView, Handler.Callback {
 
     private static final String TAG = MosaicActivity.class.getSimpleName();
     @BindView(R.id.gridview)
     GridView grid;
     //@Inject
     ChunksAdapter chunksAdapter;
-    ArrayList<Bitmap> smallimages = new ArrayList<Bitmap>();
+    ArrayList<Bitmap> smallimages ;
     List<String> hexCodes;
     ThreadPoolExecutor executor;
 
@@ -51,28 +50,13 @@ public class MosaicActivity extends BaseActivity implements MainMvpView ,Handler
         );
         grid.setVisibility(View.GONE);
         hexCodes = getIntent().getStringArrayListExtra("HexCodesListExtra");
-        executor.execute(new LoadChunksThread(hexCodes, new Handler(this),this));
+        executor.execute(new LoadChunksThread(hexCodes, new Handler(this), this));
         //createPhotoMosaic(hexCodes);
         updateProgressBar(true);
     }
 
-    @Override
-    public void showTiles() {
-
-    }
-
-    @Override
-    public void showTilesWithColor(List<Tile> tilesList) {
-
-    }
 
     /***** MVP View methods implementation *****/
-    //show tiles ...divided on image
-    //show tiles fetched from server
-    //// TODO: 2/2/17  remove these
-    @Override
-    public void showTilesWithColor() {
-    }
 
     @Override
     public void showError() {
@@ -81,7 +65,14 @@ public class MosaicActivity extends BaseActivity implements MainMvpView ,Handler
     }
 
     @Override
-    public void showTile(Bitmap tile) {
+    public void showMosaicImage() {
+
+
+    }
+
+    @Override
+    public void showTiledImage() {
+
     }
 
     @Override
@@ -107,8 +98,7 @@ public class MosaicActivity extends BaseActivity implements MainMvpView ,Handler
 
     @Override
     public boolean handleMessage(Message message) {
-        smallimages.clear();
-        smallimages.addAll((ArrayList) message.obj);
+        smallimages = (ArrayList) message.obj;
         //Getting the grid view and setting an adapter to it
         grid.setVisibility(View.VISIBLE);
         chunksAdapter = new ChunksAdapter(MosaicActivity.this, smallimages);
@@ -118,4 +108,3 @@ public class MosaicActivity extends BaseActivity implements MainMvpView ,Handler
         return false;
     }
 }
-

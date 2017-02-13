@@ -2,11 +2,9 @@ package com.swapsharma.mvvm_android.ui.activity;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.widget.ImageView;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -18,7 +16,7 @@ public class LongThread implements Runnable {
     Handler handler;
     String imageUrl;
     int mchunknumbers;
-    ImageView mImageView;
+    Bitmap scaledBitmap;
     public static final String TAG = "LongThread";
 
     List<String> mhexCodes;
@@ -36,9 +34,9 @@ public class LongThread implements Runnable {
 
 
 
-    public LongThread(ImageView imageView, int chunknumbers, Handler handler) {
+    public LongThread(Bitmap scaledBitmapx, int chunknumbers, Handler handler) {
         mchunknumbers = chunknumbers;
-        mImageView = imageView;
+        scaledBitmap = scaledBitmapx;
         this.handler = handler;
     }
 
@@ -46,7 +44,7 @@ public class LongThread implements Runnable {
     public void run() {
         Log.i(TAG, "Starting Thread : " + threadNo);
         // getBitmap(imageUrl);
-        sendMessage(1, splitImage(mImageView, mchunknumbers));
+        sendMessage(1, splitImage(scaledBitmap, mchunknumbers));
         Log.i(TAG, "Thread Completed " + threadNo);
     }
 
@@ -69,7 +67,7 @@ public class LongThread implements Runnable {
         return bitmap;
     }
 
-    private ArrayList<Bitmap> splitImage(ImageView image, int chunkNumbers) {
+    private ArrayList<Bitmap> splitImage(Bitmap scaledBitmapxx, int chunkNumbers) {
         //For the number of rows and columns of the grid to be displayed
         int rows, cols;
         //For height and width of the small image smallimage_s
@@ -77,12 +75,12 @@ public class LongThread implements Runnable {
         //To store all the small image smallimage_s in bitmap format in this list
         ArrayList<Bitmap> smallimages = new ArrayList<Bitmap>(chunkNumbers);
         //Getting the scaled bitmap of the source image
-        BitmapDrawable mydrawable = (BitmapDrawable) image.getDrawable();
-        Bitmap bitmap = mydrawable.getBitmap();
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), true);
+//        BitmapDrawable mydrawable = (BitmapDrawable) image.getDrawable();
+//        Bitmap bitmap = mydrawable.getBitmap();
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(scaledBitmapxx, scaledBitmapxx.getWidth(), scaledBitmapxx.getHeight(), true);
         rows = cols = (int) Math.sqrt(chunkNumbers);
-        smallimage_Height = bitmap.getHeight() / rows;
-        smallimage_Width = bitmap.getWidth() / cols;
+        smallimage_Height = scaledBitmapxx.getHeight() / rows;
+        smallimage_Width = scaledBitmapxx.getWidth() / cols;
         //xCo and yCo are the pixel positions of the image smallimage_s
         int yCo = 0;
         for (int x = 0; x < rows; x++) {

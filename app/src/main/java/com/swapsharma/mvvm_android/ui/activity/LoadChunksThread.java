@@ -16,9 +16,7 @@ public class LoadChunksThread implements Runnable {
 
     Handler handler;
     public static final String TAG = "LoadChunksThread";
-
     List<String> mhexCodes;
-
     Context mContext;
 
     public LoadChunksThread() {
@@ -51,22 +49,19 @@ public class LoadChunksThread implements Runnable {
     //add chunksize also here
     private ArrayList<Bitmap> loadChunksFromServer(List<String> hexCodes) throws IOException {
         ArrayList<Bitmap> bitmaps = new ArrayList<Bitmap>();
-        try {
-            Bitmap bitmap;
-            for (int i = 0; i < hexCodes.size(); ++i) {
+        Bitmap bitmap;
+        for (int i = 0; i < hexCodes.size(); ++i) {
+            try {
                 System.out.println("....." + i + "...." + hexCodes.get(i));
-//just add no load
                 InputStream input = new java.net.URL(hexCodes.get(i)).openStream();
                 // Decode Bitmap
                 bitmap = BitmapFactory.decodeStream(input);
                 bitmaps.add(bitmap);
                 System.out.println("..sss..." + i + "...." + bitmaps.size());
-//                bitmaps.add(Picasso.with(mContext).load(hexCodes.get(i)).resize(8, 8).get());
+            } catch (IOException e) {
+                System.out.println("EXCEPTION<<>>>>>>>" + e);
             }
-            return bitmaps;
-        } catch (IOException e) {
-            System.out.println("EXCEPTION<<>>>>>>>" + e);
-            return null;
         }
+        return bitmaps;
     }
 }

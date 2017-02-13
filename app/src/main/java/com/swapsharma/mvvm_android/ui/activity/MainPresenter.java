@@ -37,6 +37,19 @@ public class MainPresenter extends BasePresenter<MainMvpView> {
         if (mSubscription != null) mSubscription.unsubscribe();
     }
 
+    public void createPhotoMosaic() {
+        getMvpView().showMosaicImage();
+    }
+
+
+    public void createTiledImage(Sources sources) {
+        getMvpView().showTiledImage();
+    }
+
+
+
+
+
 
     public void loadTiles(String hexCode) {
         checkViewAttached();
@@ -53,7 +66,7 @@ public class MainPresenter extends BasePresenter<MainMvpView> {
 
                     @Override
                     public void onError(Throwable e) {
-                        System.out.println("11111....f...."+e.toString());
+                        System.out.println("11111....f...." + e.toString());
 
 
                         getMvpView().showError();
@@ -64,9 +77,9 @@ public class MainPresenter extends BasePresenter<MainMvpView> {
                         System.out.println("11111....g");
 
                         if (null != tile) {
-                            getMvpView().showTile(tile);
+                          //  getMvpView().showTile(tile);
                         } else {
-                            getMvpView().showTilesWithColor();
+                        //    getMvpView().showTilesWithColor();
                         }
                     }
                 });

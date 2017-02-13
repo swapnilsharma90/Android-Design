@@ -13,7 +13,6 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.swapsharma.mvvm_android.R;
-import com.swapsharma.mvvm_android.network.Tile;
 import com.swapsharma.mvvm_android.ui.activity.base.BaseActivity;
 import com.swapsharma.mvvm_android.util.ColorUtil;
 import com.swapsharma.mvvm_android.util.DialogFactory;
@@ -65,17 +64,15 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
         activityComponent().inject(this);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        mMainPresenter.attachView(this);
 
         grid.setVisibility(View.GONE);
-        pickImageBtn.setOnClickListener(view -> pickImageFromSource(Sources.GALLERY));
-        createMosaicBtn.setOnClickListener(view -> createPhotoMosaic());
+        pickImageBtn.setOnClickListener(view -> mMainPresenter.createTiledImage(Sources.GALLERY));
+        createMosaicBtn.setOnClickListener(view -> mMainPresenter.createPhotoMosaic());
 
         if (RxImagePicker.with(this).getActiveSubscription() != null) {
             RxImagePicker.with(this).getActiveSubscription().subscribe(this::onImagePicked);
         }
-        mMainPresenter.attachView(this);
-        //code for fetching image from gallery goes in mainpresenter
-
         int NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
         executor = new ThreadPoolExecutor(
                 NUMBER_OF_CORES * 2,
@@ -86,12 +83,12 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
         );
     }
 
+
     private void createPhotoMosaic() {
         if (!isTiled) {
             Toast.makeText(MainActivity.this, "pls tile first", Toast.LENGTH_SHORT).show();
-        }
-        //find average color
-        else {
+        } else {
+            //find average color
             try {
                 getHexCodes();
             } catch (ExecutionException e) {
@@ -118,9 +115,9 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
             updateProgressBar(true);
             Bitmap scaledBitmapx = Bitmap.createScaledBitmap((Bitmap) result, 350, 350, true);
             ivPickedImage.setImageBitmap(scaledBitmapx);
-            executor.execute(new LongThread(ivPickedImage, 3000, new Handler(this)));
-            rows = cols = (int) Math.sqrt(3000);
-//
+            executor.execute(new LongThread(scaledBitmapx, 1500, new Handler(this)));
+            rows = cols = (int) Math.sqrt(1500);
+
         } else {
             //todo not needed
         }
@@ -143,22 +140,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
     }
 
 
-    @Override
-    public void showTiles() {
-
-    }
-
-    @Override
-    public void showTilesWithColor(List<Tile> tilesList) {
-    }
-
     /***** MVP View methods implementation *****/
-    //show tiles ...divided on image
-    //show tiles fetched from server
-    //// TODO: 2/2/17  remove these
-    @Override
-    public void showTilesWithColor() {
-    }
 
     @Override
     public void showError() {
@@ -167,7 +149,15 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
     }
 
     @Override
-    public void showTile(Bitmap tile) {
+    public void showMosaicImage() {
+        createPhotoMosaic();
+    }
+
+    @Override
+    public void showTiledImage() {
+
+        pickImageFromSource(Sources.GALLERY);
+
     }
 
     @Override
@@ -203,11 +193,12 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
         Future<List<String>> future = executor.submit(task);
         hexCodes = future.get();
 
-        Intent i = new Intent(MainActivity.this,MosaicActivity.class);
+        Intent i = new Intent(MainActivity.this, MosaicActivity.class);
         i.putStringArrayListExtra("HexCodesListExtra", (ArrayList<String>) hexCodes);
         startActivity(i);
 
     }
+
     class TaskCallable implements Callable {
         @Override
         public List<String> call() throws Exception {
@@ -225,9 +216,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
                     e.printStackTrace();
                 }
             }
-
             return hexCodes;
         }
     }
 }
-

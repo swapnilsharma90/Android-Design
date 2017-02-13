@@ -21,20 +21,29 @@ public class DataManager {
         mTilessService = tilesService;
     }
 
-//    public Observable<Tile> getTiles(String hexCode) {
-//        return mTilessService.getTile(hexCode);
-//    }
-
-
     public Observable<Bitmap> getTiles(String hexCode) {
         return mTilessService.getTile(hexCode);
     }
 
 
+    
 
 
+
+
+
+
+
+
+}
 //    public Observable<List<Tile>> getTiles() {
 //        return mTilessService.getTile();
 //    }
 
-}
+//    public Observable<Tile> getTiles(String hexCode) {
+//        return mTilessService.getTile(hexCode);
+//    }
+
+
+
+
