@@ -41,6 +41,8 @@ public class BaseActivity extends AppCompatActivity {
         mActivityId = savedInstanceState != null ?
                 savedInstanceState.getLong(KEY_ACTIVITY_ID) : NEXT_ID.getAndIncrement();
         ConfigPersistentComponent configPersistentComponent;
+
+
         if (!sComponentsMap.containsKey(mActivityId)) {
             configPersistentComponent = DaggerConfigPersistentComponent.builder()
                     .applicationComponent(DesignApplication.get(this).getComponent())
@@ -49,6 +51,7 @@ public class BaseActivity extends AppCompatActivity {
         } else {
             configPersistentComponent = sComponentsMap.get(mActivityId);
         }
+
         mActivityComponent = configPersistentComponent.activityComponent(new ActivityModule(this));
     }
 

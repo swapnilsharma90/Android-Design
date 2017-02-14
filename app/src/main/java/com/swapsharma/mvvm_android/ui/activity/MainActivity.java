@@ -55,7 +55,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
     private Subscription subscription;
     ThreadPoolExecutor executor;
     ArrayList<Bitmap> tileList;
-    private Handler handler2;
     private Boolean isTiled = false;
     List<String> hexCodes;
 

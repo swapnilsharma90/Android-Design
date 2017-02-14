@@ -37,6 +37,7 @@ public class MosaicActivity extends BaseActivity implements MainMvpView, Handler
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mosaic);
+        activityComponent().inject(this);
         ButterKnife.bind(this);
 
         int NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();

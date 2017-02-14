@@ -7,6 +7,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import com.swapsharma.mvvm_android.R;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -60,6 +62,8 @@ public class LoadChunksThread implements Runnable {
                 System.out.println("..sss..." + i + "...." + bitmaps.size());
             } catch (IOException e) {
                 System.out.println("EXCEPTION<<>>>>>>>" + e);
+                //adding white color in case color not found on server
+                bitmaps.add(BitmapFactory.decodeResource(mContext.getResources(),R.drawable.gray_holder));
             }
         }
         return bitmaps;
