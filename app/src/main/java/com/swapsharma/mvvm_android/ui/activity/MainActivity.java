@@ -12,10 +12,14 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.swapsharma.mvvm_android.R;
+import com.swapsharma.mvvm_android.model.Sources;
+import com.swapsharma.mvvm_android.network.LongThread;
 import com.swapsharma.mvvm_android.presenter.MainPresenter;
 import com.swapsharma.mvvm_android.ui.activity.base.BaseActivity;
+import com.swapsharma.mvvm_android.ui.adapter.ChunksAdapter;
 import com.swapsharma.mvvm_android.util.ColorUtil;
 import com.swapsharma.mvvm_android.util.DialogFactory;
+import com.swapsharma.mvvm_android.util.RxImageConverters;
 import com.swapsharma.mvvm_android.util.RxUtil;
 
 import java.util.ArrayList;
@@ -47,9 +51,10 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
 
     @Inject
     MainPresenter mMainPresenter;
-    ChunksAdapter chunksAdapter;
+    private ChunksAdapter chunksAdapter;
 
-    int rows, cols;
+    private int rows;
+    private int cols;
     private Subscription subscription;
     ThreadPoolExecutor executor;
     ArrayList<Bitmap> tileList;
@@ -81,11 +86,17 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
             Toast.makeText(MainActivity.this, "pls tile first", Toast.LENGTH_SHORT).show();
         } else {
             //find average color
+
+            updateProgressBar(true);
             try {
                 getHexCodes();
             } catch (ExecutionException e) {
+                updateProgressBar(false);
+
                 e.printStackTrace();
             } catch (InterruptedException e) {
+                updateProgressBar(false);
+
                 e.printStackTrace();
             }
         }
@@ -101,9 +112,10 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
 
     private void onImagePicked(Object result) {
         Toast.makeText(this, String.format("Please wait ", result), Toast.LENGTH_LONG).show();
+        updateProgressBar(true);
         if (result instanceof Bitmap) {
 
-            updateProgressBar(true);
+            //updateProgressBar(true);
             Bitmap scaledBitmapx = Bitmap.createScaledBitmap((Bitmap) result, 350, 350, true);
             ivPickedImage.setImageBitmap(scaledBitmapx);
             executor.execute(new LongThread(scaledBitmapx, 3000, new Handler(this)));
@@ -170,6 +182,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
         TaskCallable task = new TaskCallable();
         Future<List<String>> future = executor.submit(task);
         hexCodes = future.get();
+        updateProgressBar(false);
 
         Intent i = new Intent(MainActivity.this, MosaicActivity.class);
         i.putStringArrayListExtra("HexCodesListExtra", (ArrayList<String>) hexCodes);

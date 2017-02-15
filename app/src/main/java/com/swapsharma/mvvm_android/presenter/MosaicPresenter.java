@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import rx.Subscription;
 
 
+//unused
 @ConfigPersistent
 public class MosaicPresenter extends BasePresenter<MainMvpView> {
 
@@ -30,6 +31,4 @@ public class MosaicPresenter extends BasePresenter<MainMvpView> {
         super.detachView();
         if (mSubscription != null) mSubscription.unsubscribe();
     }
-
-
 }

@@ -1,4 +1,4 @@
-package com.swapsharma.mvvm_android.ui.activity;
+package com.swapsharma.mvvm_android.ui.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;

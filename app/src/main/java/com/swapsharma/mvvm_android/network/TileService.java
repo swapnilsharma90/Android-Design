@@ -15,8 +15,6 @@ import rx.Observable;
 
 public interface TileService {
 
-    //http://localhost:8765/color/32/32/abc123
-//    String ENDPOINT = "http://10.0.2.2:8765/color/32/32/abc123";
     String ENDPOINT = "http://10.0.2.2:8765/color/32/32/";
 
     @GET("{hexCode}")

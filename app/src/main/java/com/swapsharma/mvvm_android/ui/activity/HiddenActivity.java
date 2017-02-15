@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
+import com.swapsharma.mvvm_android.model.Sources;
+
 public class HiddenActivity extends Activity {
     public static final String IMAGE_SOURCE = "image_source";
     private static final int SELECT_PHOTO = 100;

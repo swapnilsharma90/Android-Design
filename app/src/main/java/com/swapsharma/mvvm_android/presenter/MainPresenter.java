@@ -3,7 +3,7 @@ package com.swapsharma.mvvm_android.presenter;
 import com.swapsharma.mvvm_android.di.ConfigPersistent;
 import com.swapsharma.mvvm_android.manager.DataManager;
 import com.swapsharma.mvvm_android.ui.activity.MainMvpView;
-import com.swapsharma.mvvm_android.ui.activity.Sources;
+import com.swapsharma.mvvm_android.model.Sources;
 
 import javax.inject.Inject;
 

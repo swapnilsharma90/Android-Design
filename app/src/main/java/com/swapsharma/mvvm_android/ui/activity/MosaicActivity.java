@@ -8,8 +8,9 @@ import android.view.View;
 import android.widget.GridView;
 
 import com.swapsharma.mvvm_android.R;
+import com.swapsharma.mvvm_android.network.LoadChunksThread;
 import com.swapsharma.mvvm_android.ui.activity.base.BaseActivity;
-import com.swapsharma.mvvm_android.util.DialogFactory;
+import com.swapsharma.mvvm_android.ui.adapter.ChunksAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,12 +22,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class MosaicActivity extends BaseActivity implements MainMvpView, Handler.Callback {
+public class MosaicActivity extends BaseActivity implements Handler.Callback {
 
     private static final String TAG = MosaicActivity.class.getSimpleName();
     @BindView(R.id.gridview)
     GridView grid;
-    //@Inject
+
     ChunksAdapter chunksAdapter;
     ArrayList<Bitmap> smallimages;
     List<String> hexCodes;
@@ -51,28 +52,7 @@ public class MosaicActivity extends BaseActivity implements MainMvpView, Handler
         grid.setVisibility(View.GONE);
         hexCodes = getIntent().getStringArrayListExtra("HexCodesListExtra");
         executor.execute(new LoadChunksThread(hexCodes, new Handler(this), this));
-        //createPhotoMosaic(hexCodes);
         updateProgressBar(true);
-    }
-
-
-    /***** MVP View methods implementation *****/
-
-    @Override
-    public void showError() {
-        DialogFactory.createGenericErrorDialog(this, getString(R.string.error_loading_tiles))
-                .show();
-    }
-
-    @Override
-    public void showMosaicImage() {
-
-
-    }
-
-    @Override
-    public void showTiledImage() {
-
     }
 
     @Override

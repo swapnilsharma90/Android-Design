@@ -27,19 +27,6 @@
             android:launchMode="singleTop"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
-
-        <!--<activity-->
-            <!--android:name="com.swapsharma.mvvm_android.ui.activity.MainActivity_Test"-->
-            <!--android:theme="@style/AppTheme.NoActionBar">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
-
-
-
         <activity
             android:name="com.swapsharma.mvvm_android.ui.activity.MosaicActivity"
              />
