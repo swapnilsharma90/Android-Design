@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.swapsharma.mvvm_android.R;
+import com.swapsharma.mvvm_android.presenter.MainPresenter;
 import com.swapsharma.mvvm_android.ui.activity.base.BaseActivity;
 import com.swapsharma.mvvm_android.util.ColorUtil;
 import com.swapsharma.mvvm_android.util.DialogFactory;

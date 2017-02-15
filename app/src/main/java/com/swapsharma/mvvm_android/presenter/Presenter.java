@@ -1,4 +1,6 @@
-package com.swapsharma.mvvm_android.ui.activity.base;
+package com.swapsharma.mvvm_android.presenter;
+
+import com.swapsharma.mvvm_android.ui.activity.base.MvpView;
 
 /**
  * Every presenter in the app must either implement this interface or extend BasePresenter
