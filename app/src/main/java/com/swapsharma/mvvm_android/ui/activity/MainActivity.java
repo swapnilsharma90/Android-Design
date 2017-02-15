@@ -16,6 +16,7 @@ import com.swapsharma.mvvm_android.presenter.MainPresenter;
 import com.swapsharma.mvvm_android.ui.activity.base.BaseActivity;
 import com.swapsharma.mvvm_android.util.ColorUtil;
 import com.swapsharma.mvvm_android.util.DialogFactory;
+import com.swapsharma.mvvm_android.util.RxUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +25,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -46,10 +45,8 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
     @BindView(R.id.gridview)
     GridView grid;
 
-
     @Inject
     MainPresenter mMainPresenter;
-    //@Inject
     ChunksAdapter chunksAdapter;
 
     int rows, cols;
@@ -76,16 +73,8 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
         if (RxImagePicker.with(this).getActiveSubscription() != null) {
             RxImagePicker.with(this).getActiveSubscription().subscribe(this::onImagePicked);
         }
-        int NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
-        executor = new ThreadPoolExecutor(
-                NUMBER_OF_CORES * 2,
-                NUMBER_OF_CORES * 2,
-                60L,
-                TimeUnit.SECONDS,
-                new LinkedBlockingQueue<Runnable>()
-        );
+        executor = RxUtil.getExecutor();
     }
-
 
     private void createPhotoMosaic() {
         if (!isTiled) {
@@ -149,6 +138,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
         DialogFactory.createGenericErrorDialog(this, getString(R.string.error_loading_tiles))
                 .show();
     }
+
     @Override
     public void showMosaicImage() {
         createPhotoMosaic();
@@ -172,6 +162,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
             subscription.unsubscribe();
         }
     }
+
     public void getHexCodes() throws ExecutionException, InterruptedException {
         // do something long
         ExecutorService executor = Executors.newFixedThreadPool(1);
