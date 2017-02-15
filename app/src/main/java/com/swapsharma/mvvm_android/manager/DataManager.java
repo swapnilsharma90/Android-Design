@@ -15,7 +15,6 @@ public class DataManager {
 
     private final TileService mTilessService;
 
-
     @Inject
     public DataManager(TileService tilesService) {
         mTilessService = tilesService;
@@ -25,25 +24,6 @@ public class DataManager {
         return mTilessService.getTile(hexCode);
     }
 
-
-    
-
-
-
-
-
-
-
-
 }
-//    public Observable<List<Tile>> getTiles() {
-//        return mTilessService.getTile();
-//    }
-
-//    public Observable<Tile> getTiles(String hexCode) {
-//        return mTilessService.getTile(hexCode);
-//    }
-
-
 
 
