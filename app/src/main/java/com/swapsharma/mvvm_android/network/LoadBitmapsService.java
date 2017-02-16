@@ -14,17 +14,17 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LoadChunksThread implements Runnable {
+public class LoadBitmapsService implements Runnable {
 
     Handler handler;
-    public static final String TAG = "LoadChunksThread";
+    public static final String TAG = "LoadBitmapsService";
     List<String> mhexCodes;
     Context mContext;
 
-    public LoadChunksThread() {
+    public LoadBitmapsService() {
     }
 
-    public LoadChunksThread(List<String> hexCodes, Handler handler, Context context) {
+    public LoadBitmapsService(List<String> hexCodes, Handler handler, Context context) {
         mhexCodes = hexCodes;
         this.handler = handler;
         mContext = context;
@@ -34,7 +34,7 @@ public class LoadChunksThread implements Runnable {
     public void run() {
         Log.i(TAG, "Starting Thread : ");
         try {
-            sendMessage(1, loadChunksFromServer(mhexCodes));
+            sendMessage(1, fetchBitmaps(mhexCodes));
         } catch (IOException e) {
             e.printStackTrace();
             Log.i(TAG, "EXCEPTION occured ");
@@ -49,7 +49,7 @@ public class LoadChunksThread implements Runnable {
     }
 
     //add chunksize also here
-    private ArrayList<Bitmap> loadChunksFromServer(List<String> hexCodes) throws IOException {
+    private ArrayList<Bitmap> fetchBitmaps(List<String> hexCodes) throws IOException {
         ArrayList<Bitmap> bitmaps = new ArrayList<Bitmap>();
         Bitmap bitmap;
         for (int i = 0; i < hexCodes.size(); ++i) {
@@ -63,7 +63,7 @@ public class LoadChunksThread implements Runnable {
             } catch (IOException e) {
                 System.out.println("EXCEPTION<<>>>>>>>" + e);
                 //adding white color in case color not found on server
-                bitmaps.add(BitmapFactory.decodeResource(mContext.getResources(),R.drawable.gray_holder));
+                bitmaps.add(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.gray_holder));
             }
         }
         return bitmaps;

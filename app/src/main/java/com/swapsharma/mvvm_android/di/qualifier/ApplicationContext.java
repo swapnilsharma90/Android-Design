@@ -1,4 +1,4 @@
-package com.swapsharma.mvvm_android.di;
+package com.swapsharma.mvvm_android.di.qualifier;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

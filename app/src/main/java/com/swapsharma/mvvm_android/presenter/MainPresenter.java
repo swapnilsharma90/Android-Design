@@ -1,9 +1,8 @@
 package com.swapsharma.mvvm_android.presenter;
 
-import com.swapsharma.mvvm_android.di.ConfigPersistent;
-import com.swapsharma.mvvm_android.manager.DataManager;
-import com.swapsharma.mvvm_android.ui.activity.MainMvpView;
+import com.swapsharma.mvvm_android.di.scopes.ConfigPersistent;
 import com.swapsharma.mvvm_android.model.Sources;
+import com.swapsharma.mvvm_android.ui.activity.MainMvpView;
 
 import javax.inject.Inject;
 
@@ -12,13 +11,10 @@ import rx.Subscription;
 
 @ConfigPersistent
 public class MainPresenter extends BasePresenter<MainMvpView> {
-
-    private final DataManager mDataManager;
     private Subscription mSubscription;
 
     @Inject
-    public MainPresenter(DataManager dataManager) {
-        mDataManager = dataManager;
+    public MainPresenter() {
     }
 
     @Override

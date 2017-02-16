@@ -1,6 +1,6 @@
 package com.swapsharma.mvvm_android.di.component;
 
-import com.swapsharma.mvvm_android.di.ConfigPersistent;
+import com.swapsharma.mvvm_android.di.scopes.ConfigPersistent;
 import com.swapsharma.mvvm_android.di.module.ActivityModule;
 
 import dagger.Component;

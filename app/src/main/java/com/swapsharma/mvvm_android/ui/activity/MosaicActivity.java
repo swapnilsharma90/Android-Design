@@ -8,9 +8,9 @@ import android.view.View;
 import android.widget.GridView;
 
 import com.swapsharma.mvvm_android.R;
-import com.swapsharma.mvvm_android.network.LoadChunksThread;
+import com.swapsharma.mvvm_android.network.LoadBitmapsService;
 import com.swapsharma.mvvm_android.ui.activity.base.BaseActivity;
-import com.swapsharma.mvvm_android.ui.adapter.ChunksAdapter;
+import com.swapsharma.mvvm_android.ui.adapter.CustomGridAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ public class MosaicActivity extends BaseActivity implements Handler.Callback {
     @BindView(R.id.gridview)
     GridView grid;
 
-    ChunksAdapter chunksAdapter;
+    CustomGridAdapter customGridAdapter;
     ArrayList<Bitmap> smallimages;
     List<String> hexCodes;
     ThreadPoolExecutor executor;
@@ -51,7 +51,7 @@ public class MosaicActivity extends BaseActivity implements Handler.Callback {
         );
         grid.setVisibility(View.GONE);
         hexCodes = getIntent().getStringArrayListExtra("HexCodesListExtra");
-        executor.execute(new LoadChunksThread(hexCodes, new Handler(this), this));
+        executor.execute(new LoadBitmapsService(hexCodes, new Handler(this), this));
         updateProgressBar(true);
     }
 
@@ -71,8 +71,8 @@ public class MosaicActivity extends BaseActivity implements Handler.Callback {
         smallimages = (ArrayList) message.obj;
         //Getting the grid view and setting an adapter to it
         grid.setVisibility(View.VISIBLE);
-        chunksAdapter = new ChunksAdapter(MosaicActivity.this, smallimages);
-        grid.setAdapter(chunksAdapter);
+        customGridAdapter = new CustomGridAdapter(MosaicActivity.this, smallimages);
+        grid.setAdapter(customGridAdapter);
         grid.setNumColumns((int) Math.sqrt(smallimages.size()));
         updateProgressBar(false);
         return false;

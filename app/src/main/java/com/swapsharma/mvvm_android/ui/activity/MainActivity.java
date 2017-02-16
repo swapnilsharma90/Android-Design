@@ -13,10 +13,10 @@ import android.widget.Toast;
 
 import com.swapsharma.mvvm_android.R;
 import com.swapsharma.mvvm_android.model.Sources;
-import com.swapsharma.mvvm_android.network.LongThread;
+import com.swapsharma.mvvm_android.network.SplitImageService;
 import com.swapsharma.mvvm_android.presenter.MainPresenter;
 import com.swapsharma.mvvm_android.ui.activity.base.BaseActivity;
-import com.swapsharma.mvvm_android.ui.adapter.ChunksAdapter;
+import com.swapsharma.mvvm_android.ui.adapter.CustomGridAdapter;
 import com.swapsharma.mvvm_android.util.ColorUtil;
 import com.swapsharma.mvvm_android.util.DialogFactory;
 import com.swapsharma.mvvm_android.util.RxImageConverters;
@@ -50,8 +50,8 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
     GridView grid;
 
     @Inject
-    MainPresenter mMainPresenter;
-    private ChunksAdapter chunksAdapter;
+    MainPresenter mainPresenter;
+    private CustomGridAdapter customGridAdapter;
 
     private int rows;
     private int cols;
@@ -69,11 +69,11 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
         activityComponent().inject(this);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        mMainPresenter.attachView(this);
+        mainPresenter.attachView(this);
 
         grid.setVisibility(View.GONE);
-        pickImageBtn.setOnClickListener(view -> mMainPresenter.createTiledImage(Sources.GALLERY));
-        createMosaicBtn.setOnClickListener(view -> mMainPresenter.createPhotoMosaic());
+        pickImageBtn.setOnClickListener(view -> mainPresenter.createTiledImage(Sources.GALLERY));
+        createMosaicBtn.setOnClickListener(view -> mainPresenter.createPhotoMosaic());
 
         if (RxImagePicker.with(this).getActiveSubscription() != null) {
             RxImagePicker.with(this).getActiveSubscription().subscribe(this::onImagePicked);
@@ -114,15 +114,13 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
         Toast.makeText(this, String.format("Please wait ", result), Toast.LENGTH_LONG).show();
         updateProgressBar(true);
         if (result instanceof Bitmap) {
-
-            //updateProgressBar(true);
             Bitmap scaledBitmapx = Bitmap.createScaledBitmap((Bitmap) result, 350, 350, true);
             ivPickedImage.setImageBitmap(scaledBitmapx);
-            executor.execute(new LongThread(scaledBitmapx, 3000, new Handler(this)));
+            executor.execute(new SplitImageService(scaledBitmapx, 3000, new Handler(this)));
             rows = cols = (int) Math.sqrt(3000);
 
         } else {
-            //todo not needed
+            Toast.makeText(this, "some error occoured !", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -134,8 +132,8 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
         ivPickedImage.setVisibility(View.GONE);
         //Getting the grid view and setting an adapter to it
         grid.setVisibility(View.VISIBLE);
-        chunksAdapter = new ChunksAdapter(this, tileList);
-        grid.setAdapter(chunksAdapter);
+        customGridAdapter = new CustomGridAdapter(this, tileList);
+        grid.setAdapter(customGridAdapter);
         grid.setNumColumns((int) Math.sqrt(tileList.size()));
         updateProgressBar(false);
         isTiled = true;
@@ -169,16 +167,14 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mMainPresenter.detachView();
+        mainPresenter.detachView();
         if (subscription != null) {
             subscription.unsubscribe();
         }
     }
 
     public void getHexCodes() throws ExecutionException, InterruptedException {
-        // do something long
         ExecutorService executor = Executors.newFixedThreadPool(1);
-        //new Thread(new Task()).start();
         TaskCallable task = new TaskCallable();
         Future<List<String>> future = executor.submit(task);
         hexCodes = future.get();

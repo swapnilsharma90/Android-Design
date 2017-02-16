@@ -8,9 +8,4 @@ public abstract class MyGsonTypeAdapterFactory implements TypeAdapterFactory {
     public static TypeAdapterFactory create() {
         return new AutoValueGson_MyGsonTypeAdapterFactory();
     }
-
-
-
-
-
 }

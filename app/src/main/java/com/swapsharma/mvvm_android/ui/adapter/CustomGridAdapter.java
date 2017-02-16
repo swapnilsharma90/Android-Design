@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import com.swapsharma.mvvm_android.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -20,17 +19,15 @@ import javax.inject.Inject;
  * Created by swapsharma on 2/1/17.
  */
 
-public class ChunksAdapter extends BaseAdapter {
+public class CustomGridAdapter extends BaseAdapter {
 
     private Context mContext;
-    private List<String> mhexCodes;
     private ArrayList<Bitmap> imageChunks;
-
-
-    private int imageWidth, imageHeight;
+    private int imageWidth;
+    private int imageHeight;
 
     @Inject
-    public ChunksAdapter(Context context, ArrayList<Bitmap> images) {
+    public CustomGridAdapter(Context context, ArrayList<Bitmap> images) {
         mContext = context;
         imageChunks = images;
         imageWidth = images.get(0).getWidth();

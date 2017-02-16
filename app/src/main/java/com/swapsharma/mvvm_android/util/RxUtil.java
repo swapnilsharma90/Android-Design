@@ -16,13 +16,13 @@ public class RxUtil {
 
     public static ThreadPoolExecutor getExecutor() {
         int NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
-        ThreadPoolExecutor executor = new ThreadPoolExecutor(
+        return new ThreadPoolExecutor(
                 NUMBER_OF_CORES * 2,
                 NUMBER_OF_CORES * 2,
                 60L,
                 TimeUnit.SECONDS,
                 new LinkedBlockingQueue<Runnable>()
         );
-        return executor;
+        //return executor;
     }
 }

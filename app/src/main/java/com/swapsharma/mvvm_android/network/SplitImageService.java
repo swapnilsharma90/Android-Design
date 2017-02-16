@@ -1,40 +1,33 @@
 package com.swapsharma.mvvm_android.network;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LongThread implements Runnable {
+public class SplitImageService implements Runnable {
 
     int threadNo;
     Handler handler;
-    String imageUrl;
     int mchunknumbers;
     Bitmap scaledBitmap;
-    public static final String TAG = "LongThread";
+    public static final String TAG = "SplitImageService";
 
     List<String> mhexCodes;
     Handler hexHandler;
 
-
-
-    public LongThread() {
+    public SplitImageService() {
     }
 
-    public LongThread(List<String> hexCodes, Handler handler) {
+    public SplitImageService(List<String> hexCodes, Handler handler) {
         mhexCodes = hexCodes;
         this.hexHandler = handler;
     }
 
-
-
-    public LongThread(Bitmap scaledBitmapx, int chunknumbers, Handler handler) {
+    public SplitImageService(Bitmap scaledBitmapx, int chunknumbers, Handler handler) {
         mchunknumbers = chunknumbers;
         scaledBitmap = scaledBitmapx;
         this.handler = handler;
@@ -43,7 +36,6 @@ public class LongThread implements Runnable {
     @Override
     public void run() {
         Log.i(TAG, "Starting Thread : " + threadNo);
-        // getBitmap(imageUrl);
         sendMessage(1, splitImage(scaledBitmap, mchunknumbers));
         Log.i(TAG, "Thread Completed " + threadNo);
     }
@@ -51,20 +43,6 @@ public class LongThread implements Runnable {
     public void sendMessage(int what, ArrayList<Bitmap> splittedList) {
         Message message = handler.obtainMessage(what, splittedList);
         message.sendToTarget();
-    }
-
-    private Bitmap getBitmap(String url) {
-        Bitmap bitmap = null;
-        try {
-            // Download Image from URL
-            InputStream input = new java.net.URL(url).openStream();
-            // Decode Bitmap
-            bitmap = BitmapFactory.decodeStream(input);
-            // Do extra processing with the bitmap
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return bitmap;
     }
 
     private ArrayList<Bitmap> splitImage(Bitmap scaledBitmapxx, int chunkNumbers) {
@@ -75,8 +53,6 @@ public class LongThread implements Runnable {
         //To store all the small image smallimage_s in bitmap format in this list
         ArrayList<Bitmap> smallimages = new ArrayList<Bitmap>(chunkNumbers);
         //Getting the scaled bitmap of the source image
-//        BitmapDrawable mydrawable = (BitmapDrawable) image.getDrawable();
-//        Bitmap bitmap = mydrawable.getBitmap();
         Bitmap scaledBitmap = Bitmap.createScaledBitmap(scaledBitmapxx, scaledBitmapxx.getWidth(), scaledBitmapxx.getHeight(), true);
         rows = cols = (int) Math.sqrt(chunkNumbers);
         smallimage_Height = scaledBitmapxx.getHeight() / rows;

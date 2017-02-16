@@ -3,7 +3,7 @@ package com.swapsharma.mvvm_android.di.module;
 import android.app.Activity;
 import android.content.Context;
 
-import com.swapsharma.mvvm_android.di.ActivityContext;
+import com.swapsharma.mvvm_android.di.qualifier.ActivityContext;
 
 import dagger.Module;
 import dagger.Provides;

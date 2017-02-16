@@ -3,10 +3,6 @@ package com.swapsharma.mvvm_android.util;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 
-/**
- * Created by swapsharma on 2/1/17.
- */
-
 public class ColorUtil {
     /*
     pixelSpacing tells how many pixels to skip each pixel.
