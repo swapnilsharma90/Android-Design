@@ -29,8 +29,8 @@ public class MosaicActivity extends BaseActivity implements Handler.Callback {
     GridView grid;
 
     CustomGridAdapter customGridAdapter;
-    ArrayList<Bitmap> smallimages;
-    List<String> hexCodes;
+    ArrayList<Bitmap> bitmapArrayList;
+    List<String> hexCodesList;
     ThreadPoolExecutor executor;
 
 
@@ -50,8 +50,8 @@ public class MosaicActivity extends BaseActivity implements Handler.Callback {
                 new LinkedBlockingQueue<Runnable>()
         );
         grid.setVisibility(View.GONE);
-        hexCodes = getIntent().getStringArrayListExtra("HexCodesListExtra");
-        executor.execute(new LoadBitmapsService(hexCodes, new Handler(this), this));
+        hexCodesList = getIntent().getStringArrayListExtra("HexCodesListExtra");
+        executor.execute(new LoadBitmapsService(hexCodesList, new Handler(this), this));
         updateProgressBar(true);
     }
 
@@ -68,12 +68,12 @@ public class MosaicActivity extends BaseActivity implements Handler.Callback {
 
     @Override
     public boolean handleMessage(Message message) {
-        smallimages = (ArrayList) message.obj;
-        //Getting the grid view and setting an adapter to it
+        bitmapArrayList = (ArrayList) message.obj;
+        //Getting the gridView view and setting an adapter to it
         grid.setVisibility(View.VISIBLE);
-        customGridAdapter = new CustomGridAdapter(MosaicActivity.this, smallimages);
+        customGridAdapter = new CustomGridAdapter(MosaicActivity.this, bitmapArrayList);
         grid.setAdapter(customGridAdapter);
-        grid.setNumColumns((int) Math.sqrt(smallimages.size()));
+        grid.setNumColumns((int) Math.sqrt(bitmapArrayList.size()));
         updateProgressBar(false);
         return false;
     }

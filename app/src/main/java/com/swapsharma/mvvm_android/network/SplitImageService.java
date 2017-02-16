@@ -3,7 +3,6 @@ package com.swapsharma.mvvm_android.network;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +34,7 @@ public class SplitImageService implements Runnable {
 
     @Override
     public void run() {
-        Log.i(TAG, "Starting Thread : " + threadNo);
         sendMessage(1, splitImage(scaledBitmap, mchunknumbers));
-        Log.i(TAG, "Thread Completed " + threadNo);
     }
 
     public void sendMessage(int what, ArrayList<Bitmap> splittedList) {

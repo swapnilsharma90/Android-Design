@@ -12,7 +12,7 @@
         android:layout_below="@+id/gridview"
         android:layout_marginTop="30dp"
         android:gravity="center"
-        android:text="Create tiles" />
+        android:text="@string/create_tiles_text" />
 
 
     <Button
@@ -22,7 +22,7 @@
         android:layout_below="@+id/pickImageBtn"
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:text="create Mosiac" />
+        android:text="@string/create_mosiac_text" />
 
 
     <ImageView

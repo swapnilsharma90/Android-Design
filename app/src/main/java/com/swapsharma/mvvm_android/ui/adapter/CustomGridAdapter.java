@@ -22,26 +22,26 @@ import javax.inject.Inject;
 public class CustomGridAdapter extends BaseAdapter {
 
     private Context mContext;
-    private ArrayList<Bitmap> imageChunks;
+    private ArrayList<Bitmap> bitmapArrayList;
     private int imageWidth;
     private int imageHeight;
 
     @Inject
     public CustomGridAdapter(Context context, ArrayList<Bitmap> images) {
         mContext = context;
-        imageChunks = images;
+        bitmapArrayList = images;
         imageWidth = images.get(0).getWidth();
         imageHeight = images.get(0).getHeight();
     }
 
     @Override
     public int getCount() {
-        return imageChunks.size();
+        return bitmapArrayList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return imageChunks.get(position);
+        return bitmapArrayList.get(position);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class CustomGridAdapter extends BaseAdapter {
         }
         ImageView imageView = (ImageView) grid.findViewById(R.id.image);
         imageView.setLayoutParams(new LinearLayout.LayoutParams(imageWidth + 2, imageHeight - 2));
-        imageView.setImageBitmap(imageChunks.get(position));
+        imageView.setImageBitmap(bitmapArrayList.get(position));
         return grid;
     }
 }

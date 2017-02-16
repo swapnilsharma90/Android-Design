@@ -41,26 +41,23 @@ import rx.Subscription;
 public class MainActivity extends BaseActivity implements MainMvpView, Handler.Callback {
 
     @BindView(R.id.pickedIv)
-    ImageView ivPickedImage;
+    ImageView pickedIv;
     @BindView(R.id.pickImageBtn)
     Button pickImageBtn;
     @BindView(R.id.createMosiacBtn)
     Button createMosaicBtn;
     @BindView(R.id.gridview)
-    GridView grid;
-
+    GridView gridView;
     @Inject
     MainPresenter mainPresenter;
     private CustomGridAdapter customGridAdapter;
-
     private int rows;
     private int cols;
     private Subscription subscription;
     ThreadPoolExecutor executor;
-    ArrayList<Bitmap> tileList;
+    ArrayList<Bitmap> tiledImagesList;
     private Boolean isTiled = false;
-    List<String> hexCodes;
-
+    List<String> hexCodesList;
     private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
@@ -71,7 +68,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
         ButterKnife.bind(this);
         mainPresenter.attachView(this);
 
-        grid.setVisibility(View.GONE);
+        gridView.setVisibility(View.GONE);
         pickImageBtn.setOnClickListener(view -> mainPresenter.createTiledImage(Sources.GALLERY));
         createMosaicBtn.setOnClickListener(view -> mainPresenter.createPhotoMosaic());
 
@@ -83,20 +80,18 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
 
     private void createPhotoMosaic() {
         if (!isTiled) {
-            Toast.makeText(MainActivity.this, "pls tile first", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Please select image first !!", Toast.LENGTH_SHORT).show();
         } else {
             //find average color
-
-            updateProgressBar(true);
+           // updateProgressBar(true);
+            Toast.makeText(MainActivity.this, "Creating Mosaic !!", Toast.LENGTH_SHORT).show();
             try {
                 getHexCodes();
             } catch (ExecutionException e) {
                 updateProgressBar(false);
-
                 e.printStackTrace();
             } catch (InterruptedException e) {
                 updateProgressBar(false);
-
                 e.printStackTrace();
             }
         }
@@ -111,14 +106,13 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
     }
 
     private void onImagePicked(Object result) {
-        Toast.makeText(this, String.format("Please wait ", result), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Creating tiles for you! ", Toast.LENGTH_LONG).show();
         updateProgressBar(true);
         if (result instanceof Bitmap) {
-            Bitmap scaledBitmapx = Bitmap.createScaledBitmap((Bitmap) result, 350, 350, true);
-            ivPickedImage.setImageBitmap(scaledBitmapx);
-            executor.execute(new SplitImageService(scaledBitmapx, 3000, new Handler(this)));
-            rows = cols = (int) Math.sqrt(3000);
-
+            Bitmap scaledBitmap = Bitmap.createScaledBitmap((Bitmap) result, 350, 350, true);
+            pickedIv.setImageBitmap(scaledBitmap);
+            executor.execute(new SplitImageService(scaledBitmap, 2000, new Handler(this)));
+            rows = cols = (int) Math.sqrt(2000);
         } else {
             Toast.makeText(this, "some error occoured !", Toast.LENGTH_SHORT).show();
         }
@@ -127,19 +121,16 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
 
     @Override
     public boolean handleMessage(Message message) {
-        tileList = (ArrayList) message.obj;
-
-        ivPickedImage.setVisibility(View.GONE);
-        //Getting the grid view and setting an adapter to it
-        grid.setVisibility(View.VISIBLE);
-        customGridAdapter = new CustomGridAdapter(this, tileList);
-        grid.setAdapter(customGridAdapter);
-        grid.setNumColumns((int) Math.sqrt(tileList.size()));
+        tiledImagesList = (ArrayList) message.obj;
+        pickedIv.setVisibility(View.GONE);
+        gridView.setVisibility(View.VISIBLE);
+        customGridAdapter = new CustomGridAdapter(this, tiledImagesList);
+        gridView.setAdapter(customGridAdapter);
+        gridView.setNumColumns((int) Math.sqrt(tiledImagesList.size()));
         updateProgressBar(false);
         isTiled = true;
         return true;
     }
-
 
     /***** MVP View methods implementation *****/
 
@@ -177,33 +168,31 @@ public class MainActivity extends BaseActivity implements MainMvpView, Handler.C
         ExecutorService executor = Executors.newFixedThreadPool(1);
         TaskCallable task = new TaskCallable();
         Future<List<String>> future = executor.submit(task);
-        hexCodes = future.get();
-        updateProgressBar(false);
+        hexCodesList = future.get();
+       // updateProgressBar(false);
 
-        Intent i = new Intent(MainActivity.this, MosaicActivity.class);
-        i.putStringArrayListExtra("HexCodesListExtra", (ArrayList<String>) hexCodes);
-        startActivity(i);
-
+        Intent intent = new Intent(MainActivity.this, MosaicActivity.class);
+        intent.putStringArrayListExtra("HexCodesListExtra", (ArrayList<String>) hexCodesList);
+        startActivity(intent);
     }
 
     class TaskCallable implements Callable {
         @Override
         public List<String> call() throws Exception {
             String url = "http://10.0.2.2:8765/color/8/8/";
-            hexCodes = new ArrayList<>();
-            for (int i = 0; i < rows * cols; i++) {
-                final int value = i;
+            hexCodesList = new ArrayList<>();
+            for (int i = 0; i < rows*cols; i++) {
                 try {
-                    String hex = Integer.toString
-                            (ColorUtil.calculateAverageColor((Bitmap) grid.getItemAtPosition(i), 4), 16);
+                    String retrievedHex = Integer.toString
+                            (ColorUtil.calculateAverageColor((Bitmap) gridView.getItemAtPosition(i), 4), 16);
                     //remove - if contains
-                    String hexCode = hex.replaceAll("-", "");
-                    hexCodes.add(url.concat(hexCode));
+                    String hexCode = retrievedHex.replaceAll("-", "");
+                    hexCodesList.add(url.concat(hexCode));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-            return hexCodes;
+            return hexCodesList;
         }
     }
 }

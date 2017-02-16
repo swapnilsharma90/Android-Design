@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 import com.swapsharma.mvvm_android.R;
 
@@ -32,14 +31,11 @@ public class LoadBitmapsService implements Runnable {
 
     @Override
     public void run() {
-        Log.i(TAG, "Starting Thread : ");
         try {
             sendMessage(1, fetchBitmaps(mhexCodes));
         } catch (IOException e) {
             e.printStackTrace();
-            Log.i(TAG, "EXCEPTION occured ");
         }
-        Log.i(TAG, "Thread Completed ");
     }
 
 
@@ -48,7 +44,6 @@ public class LoadBitmapsService implements Runnable {
         message.sendToTarget();
     }
 
-    //add chunksize also here
     private ArrayList<Bitmap> fetchBitmaps(List<String> hexCodes) throws IOException {
         ArrayList<Bitmap> bitmaps = new ArrayList<Bitmap>();
         Bitmap bitmap;
@@ -56,10 +51,8 @@ public class LoadBitmapsService implements Runnable {
             try {
                 System.out.println("....." + i + "...." + hexCodes.get(i));
                 InputStream input = new java.net.URL(hexCodes.get(i)).openStream();
-                // Decode Bitmap
                 bitmap = BitmapFactory.decodeStream(input);
                 bitmaps.add(bitmap);
-                System.out.println("..sss..." + i + "...." + bitmaps.size());
             } catch (IOException e) {
                 System.out.println("EXCEPTION<<>>>>>>>" + e);
                 //adding white color in case color not found on server
